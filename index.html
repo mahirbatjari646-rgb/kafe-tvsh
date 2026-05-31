@@ -1,1 +1,229 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mocca Kaffe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea;
+            color: #4a3b32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            max-width: 450px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #5c4033;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .info {
+            background-color: #fdfbf7;
+            border-left: 4px solid #8b5a2b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1c7bd;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #4a3b32;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        select:focus {
+            border-color: #6f4e37;
+        }
+        
+        /* Stili për shfaqjen vizuale të paketimit */
+        .preview-box {
+            background-color: #fcfbfa;
+            border: 2px dashed #e6dfd7;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .packet-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: #e6dfd7;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 3px;
+        }
 
+        .fatura {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #e6dfd7;
+        }
+        .rresht {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6f4e37;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>☕ Mocca Kaffe</h2>
+    
+    <div class="info">
+        Çmimi bazë i kafes: <strong>12.00€ / 1kg</strong><br>
+        TVSH e përfshirë: <strong>18%</strong>
+    </div>
+
+    <!-- 1. Zgjedhja e Sasisë -->
+    <label for="sasia">Zgjidh sasinë e kafes:</label>
+    <select id="sasia" onchange="llogaritFaturen()">
+        <option value="0.100">100 g</option>
+        <option value="0.200">200 g</option>
+        <option value="0.500">500 g</option>
+        <option value="1.000">1 kg (1000 g)</option>
+    </select>
+
+    <!-- 2. Zgjedhja e Letrës / Paketimit -->
+    <label for="letra">Lloji i letrës (Paketimi):</label>
+    <select id="letra" onchange="llogaritFaturen()">
+        <option value="bardhe">Letër Normale e Bardhë (+0.00€)</option>
+        <option value="zeza">Letër e Zezë (Paketim më i fortë) (+0.50€)</option>
+    </select>
+
+    <!-- 3. Zgjedhja e Nuancës së Kafes -->
+    <label for="nuanca">Nuanca e kafes:</label>
+    <select id="nuanca" onchange="llogaritFaturen()">
+        <option value="Kafte">E Kaftë</option>
+        <option value="Kafte e Qelet">E Kaftë e Qelët</option>
+        <option value="Zeza">E Zezë</option>
+        <option value="Perzier">E Përzier</option>
+    </select>
+
+    <!-- Seksioni i Pamjes Vizuale (Preview) -->
+    <div class="preview-box">
+        <div id="packetIcon" class="packet-icon">📄</div>
+        <div id="statusTeksti" style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">Paketim Normal</div>
+        <div>
+            <span id="badgeSasia" class="badge">100g</span>
+            <span id="badgeNuanca" class="badge">Nuanca: E Kaftë</span>
+        </div>
+    </div>
+
+    <!-- Fatura dhe Llogaritja -->
+    <div class="fatura">
+        <div class="rresht">
+            <span>Vlera pa TVSH:</span>
+            <span id="vlera-pa-tvsh">0.00 €</span>
+        </div>
+        <div class="rresht">
+            <span>TVSH (18%):</span>
+            <span id="tvsh">0.00 €</span>
+        </div>
+        <div class="rresht total">
+            <span>Çmimi Total (me TVSH):</span>
+            <span id="total">0.00 €</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function llogaritFaturen() {
+    // Konstantet bazë
+    const cmimiPerGram = 12 / 1000; // 0.012€ për gram
+    const tvshNorma = 0.18; // 18% TVSH
+
+    // Marrja e vlerave nga dropdowns
+    const sasia = parseFloat(document.getElementById('sasia').value);
+    const llojiLetres = document.getElementById('letra').value;
+    const nuancaKafes = document.getElementById('nuanca').value;
+
+    // Llogaritja e çmimit të kafes sipas peshës
+    let cmimiKafe = sasia * 1000 * cmimiPerGram;
+
+    // Shto shtesë nëse zgjidhet paketimi i zi/fortë
+    let cmimiShtesePaketimi = 0;
+    if (llojiLetres === 'zeza') {
+        cmimiShtesePaketimi = 0.50; // Paketimi i fortë kushton 0.50€ më shumë
+    }
+
+    // Çmimi total final (me TVSH)
+    const cmimiTotal = cmimiKafe + cmimiShtesePaketimi;
+
+    // Formula për të gjetur vlerën pa TVSH
+    const vleraPaTvsh = cmimiTotal / (1 + tvshNorma);
+    const vleraTvsh = cmimiTotal - vleraPaTvsh;
+
+    // Përditësimi i faturës në ekran
+    document.getElementById('vlera-pa-tvsh').innerText = vleraPaTvsh.toFixed(2) + " €";
+    document.getElementById('tvsh').innerText = vleraTvsh.toFixed(2) + " €";
+    document.getElementById('total').innerText = cmimiTotal.toFixed(2) + " €";
+
+    // PËRDITËSIMI VIZUAL (Ndryshimi i figurës dhe badg-eve)
+    const packetIconElement = document.getElementById('packetIcon');
+    const statusTekstiElement = document.getElementById('statusTeksti');
+    const badgeSasiaElement = document.getElementById('badgeSasia');
+    const badgeNuancaElement = document.getElementById('badgeNuanca');
+
+    // Përditëso peshën te badg-i (shndërro vlerën p.sh. 0.100 në 100g)
+    badgeSasiaElement.innerText = (sasia * 1000) + "g";
+    badgeNuancaElement.innerText = "Nuanca: " + nuancaKafes;
+
+    // Ndryshimi i figurës/ikones sipas paketimit të përzgjedhur
+    if (llojiLetres === 'zeza') {
+        packetIconElement.innerText = "🛍️"; // Ikona për paketim premium/të fortë (Letër e Zezë)
+        statusTekstiElement.innerText = "Paketim i Fortë (Letër e Zezë)";
+        statusTekstiElement.style.color = "#000000";
+    } else {
+        packetIconElement.innerText = "📄"; // Ikona për paketim të thjeshtë (Letër e Bardhë)
+        statusTekstiElement.innerText = "Paketim Normal (Letër e Bardhë)";
+        statusTekstiElement.style.color = "#8b5a2b";
+    }
+}
+
+// Ekzekuto llogaritjen menjëherë kur hapet faqja për herë të parë
+window.onload = llogaritFaturen;
+</script>
+
+</body>
+</html>

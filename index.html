@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mocca Kaffe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea;
+            color: #4a3b32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "☕ COFFEE TIME";
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #6f4e37;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 30px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #5c4033;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+        .slogan {
+            text-align: center;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8b5a2b;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .info {
+            background-color: #fdfbf7;
+            border-left: 4px solid #8b5a2b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        select, input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1c7bd;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #4a3b32;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            border-color: #6f4e37;
+            box-shadow: 0 0 5px rgba(111, 78, 55, 0.3);
+        }
+        
+        .visual-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #fdfcfb;
+            border: 1px solid #e6dfd7;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .paper-packet {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            width: 40%;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            filter: grayscale(40%);
+        }
+        .paper-packet.active {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.08);
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(111, 78, 55, 0.12);
+            border: 1px solid #6f4e37;
+        }
+        .packet-img {
+            font-size: 55px;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+        .packet-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #5c4033;
+        }
+
+        .status-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background-color: #6f4e37;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .badge-outline {
+            background-color: #fff;
+            color: #6f4e37;
+            border: 1px solid #6f4e37;
+        }
+
+        .fatura {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e6dfd7;
+            margin-bottom: 20px;
+        }
+        .rresht {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6f4e37;
+            margin-top: 5px;
+            border-top: 1px solid #e6dfd7;
+            padding-top: 10px;
+        }
+
+        .btn-porosit {
+            width: 100%;
+            background-color: #6f4e37;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 4px 12px rgba(111, 78, 55, 0.2);
+        }
+        .btn-porosit:hover {
+            background-color: #5c4033;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>☕ Mocca Kaffe</h2>
+    <div class="slogan">Premium Quality Blend</div>
+    
+    <div class="info">
+        Çmimi bazë i kafes: <strong>12.00€ / 1kg</strong><br>
+        TVSH e përfshirë: <strong>18%</strong> (Paketimi: <strong>FALAS</strong>)
+    </div>
+
+    <!-- FORMATIMI AUTOMATIK ME LINKUN TËND -->
+    <form action="https://formspree.io/f/mojbzoqj" method="POST">
+        
+        <!-- Detajet e Klientit (U hoq placeholder-i i vjetër) -->
+        <label for="emri">Emri dhe Mbiemri juaj:</label>
+        <input type="text" id="emri" name="Emri Klientit" required>
+
+        <label for="telefoni">Numri i telefonit:</label>
+        <input type="tel" id="telefoni" name="Numri Telefonit" placeholder="+383 4X XXX XXX" required>
+
+        <!-- 1. Zgjedhja e sasisë -->
+        <label for="sasia">Zgjidh sasinë e kafes:</label>
+        <select id="sasia" name="Sasia e zgjedhur" onchange="llogaritFaturen()">
+            <option value="0.100">100 g</option>
+            <option value="0.200">200 g</option>
+            <option value="0.300">300 g</option>
+            <option value="0.400">400 g</option>
+            <option value="0.500">500 g</option>
+            <option value="0.600">600 g</option>
+            <option value="0.700">700 g</option>
+            <option value="0.800">800 g</option>
+            <option value="0.900">900 g</option>
+            <option value="1.000">1 kg (1000 g)</option>
+        </select>
+
+        <!-- 2. Zgjedhja e Letrës -->
+        <label for="letra">Lloji i letrës (Paketimi):</label>
+        <select id="letra" name="Lloji i Paketimit" onchange="llogaritFaturen()">
+            <option value="bardhe">Letër Normale e Bardhë (Pa Pagesë)</option>
+            <option value="zeza">Letër e Zezë / Paketim më i fortë (Pa Pagesë)</option>
+        </select>
+
+        <!-- 3. Zgjedhja e Nuancës -->
+        <label for="nuanca">Nuanca e kafes:</label>
+        <select id="nuanca" name="Nuanca e Kafes" onchange="llogaritFaturen()">
+            <option value="E Kaftë">E Kaftë</option>
+            <option value="E Kaftë e Qelët">E Kaftë e Qelët</option>
+            <option value="E Zezë">E Zezë</option>
+            <option value="60% Zezë / 40% Kaftë">Më shumë në të Zezë (60% Zezë / 40% Kaftë)</option>
+            <option value="60% Kaftë / 40% Zezë">Më shumë në të Kaftë (60% Kaftë / 40% Zezë)</option>
+            <option value="E Përzier">E Përzier</option>
+        </select>
+
+        <!-- Fushë e fshehur për çmimin -->
+        <input type="hidden" id="hiddenTotal" name="Cmimi Total final">
+
+        <!-- EKRANI VIZUAL -->
+        <div class="visual-display">
+            <div id="pakoBardhe" class="paper-packet active">
+                <div class="packet-img">📄</div>
+                <div class="packet-label">Letër e Bardhë</div>
+            </div>
+            
+            <div style="font-size: 24px; color: #8b5a2b;">⚡</div>
+
+            <div id="pakoZeza" class="paper-packet">
+                <div class="packet-img">🛍️</div>
+                <div class="packet-label">Paketim i Fortë</div>
+            </div>
+        </div>
+
+        <!-- Etiketat e Statusit -->
+        <div class="status-bar">
+            <span id="badgeSasia" class="badge">100g</span>
+            <span id="badgeNuanca" class="badge badge-outline">Nuanca: E Kaftë</span>
+        </div>
+
+        <!-- Fatura -->
+        <div class="fatura">
+            <div class="rresht">
+                <span>Vlera pa TVSH:</span>
+                <span id="vlera-pa-tvsh">0.00 €</span>
+            </div>
+            <div class="rresht">
+                <span>TVSH (18%):</span>
+                <span id="tvsh">0.00 €</span>
+            </div>
+            <div class="rresht total">
+                <span>Çmimi Total (me TVSH):</span>
+                <span id="total">0.00 €</span>
+            </div>
+        </div>
+
+        <!-- BUTONI I POROSISE -->
+        <button type="submit" class="btn-porosit">🚀 Dërgo Porosinë</button>
+    </form>
+</div>
+
+<script>
+function llogaritFaturen() {
+    const cmimiPerGram = 12 / 1000; 
+    const tvshNorma = 0.18; 
+
+    const sasia = parseFloat(document.getElementById('sasia').value);
+    const llojiLetres = document.getElementById('letra').value;
+    const nuancaKafes = document.getElementById('nuanca').value;
+
+    const cmimiTotal = sasia * 1000 * cmimiPerGram;
+
+    const vleraPaTvsh = cmimiTotal / (1 + tvshNorma);
+    const vleraTvsh = cmimiTotal - vleraPaTvsh;
+
+    document.getElementById('vlera-pa-tvsh').innerText = vleraPaTvsh.toFixed(2) + " €";
+    document.getElementById('tvsh').innerText = vleraTvsh.toFixed(2) + " €";
+    document.getElementById('total').innerText = cmimiTotal.toFixed(2) + " €";
+    
+    document.getElementById('hiddenTotal').value = cmimiTotal.toFixed(2) + " €";
+
+    document.getElementById('badgeSasia').innerText = (sasia * 1000) + "g";
+    document.getElementById('badgeNuanca').innerText = "Nuanca: " + nuancaKafes;
+
+    const pakoBardhe = document.getElementById('pakoBardhe');
+    const pakoZeza = document.getElementById('pakoZeza');
+
+    if (llojiLetres === 'zeza') {
+        pakoZeza.classList.add('active');
+        pakoBardhe.classList.remove('active');
+    } else {
+        pakoBardhe.classList.add('active');
+        pakoZeza.classList.remove('active');
+    }
+}
+
+window.onload = llogaritFaturen;
+</script>
+
+</body>
+</html>

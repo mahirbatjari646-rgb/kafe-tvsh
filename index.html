@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mocca Kaffe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea;
+            color: #4a3b32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Efekt dekorativ "Cool" në qoshe për t'i rënë në sy klientit */
+        .container::before {
+            content: "☕ COFFEE TIME";
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #6f4e37;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 30px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #5c4033;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+        .slogan {
+            text-align: center;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8b5a2b;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .info {
+            background-color: #fdfbf7;
+            border-left: 4px solid #8b5a2b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1c7bd;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #4a3b32;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+        select:focus {
+            border-color: #6f4e37;
+            box-shadow: 0 0 5px rgba(111, 78, 55, 0.3);
+        }
+        
+        /* DIZAJNI I RIZI i paketimit: Letra e Bardhë vs Letra e Kaftë/Zezë */
+        .visual-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #fdfcfb;
+            border: 1px solid #e6dfd7;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .paper-packet {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            width: 40%;
+            transition: all 0.3s ease;
+            opacity: 0.4; /* Paketohet automatikisht si i zbehtë nese nuk zgjidhet */
+            filter: grayscale(40%);
+        }
+        /* Kur pakoja është e përzgjedhur, bëhet "cool" dhe ndriçon */
+        .paper-packet.active {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.08);
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(111, 78, 55, 0.12);
+            border: 1px solid #6f4e37;
+        }
+        .packet-img {
+            font-size: 55px;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+        .packet-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #5c4033;
+        }
+
+        /* Badges për sasinë dhe nuancën */
+        .status-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background-color: #6f4e37;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .badge-outline {
+            background-color: #fff;
+            color: #6f4e37;
+            border: 1px solid #6f4e37;
+        }
+
+        /* Fatura */
+        .fatura {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e6dfd7;
+        }
+        .rresht {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6f4e37;
+            margin-top: 5px;
+            border-top: 1px solid #e6dfd7;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>☕ Mocca Kaffe</h2>
+    <div class="slogan">Premium Quality Blend</div>
+    
+    <div class="info">
+        Çmimi bazë i kafes: <strong>12.00€ / 1kg</strong><br>
+        TVSH e përfshirë: <strong>18%</strong> (Paketimi: <strong>FALAS</strong>)
+    </div>
+
+    <!-- 1. Zgjedhja e plotë e sasisë (100g deri 1kg) -->
+    <label for="sasia">Zgjidh sasinë e kafes:</label>
+    <select id="sasia" onchange="llogaritFaturen()">
+        <option value="0.100">100 g</option>
+        <option value="0.200">200 g</option>
+        <option value="0.300">300 g</option>
+        <option value="0.400">400 g</option>
+        <option value="0.500">500 g</option>
+        <option value="0.600">600 g</option>
+        <option value="0.700">700 g</option>
+        <option value="0.800">800 g</option>
+        <option value="0.900">900 g</option>
+        <option value="1.000">1 kg (1000 g)</option>
+    </select>
+
+    <!-- 2. Zgjedhja e Letrës / Paketimit (FALAS) -->
+    <label for="letra">Lloji i letrës (Paketimi):</label>
+    <select id="letra" onchange="llogaritFaturen()">
+        <option value="bardhe">Letër Normale e Bardhë (Pa Pagesë)</option>
+        <option value="zeza">Letër e Zezë / Paketim më i fortë (Pa Pagesë)</option>
+    </select>
+
+    <!-- 3. Zgjedhja e Nuancës me përqindjet e reja -->
+    <label for="nuanca">Nuanca e kafes:</label>
+    <select id="nuanca" onchange="llogaritFaturen()">
+        <option value="E Kaftë">E Kaftë</option>
+        <option value="E Kaftë e Qelët">E Kaftë e Qelët</option>
+        <option value="E Zezë">E Zezë</option>
+        <option value="60% Zezë / 40% Kaftë">Më shumë në të Zezë (60% Zezë / 40% Kaftë)</option>
+        <option value="60% Kaftë / 40% Zezë">Më shumë në të Kaftë (60% Kaftë / 40% Zezë)</option>
+        <option value="E Përzier">E Përzier</option>
+    </select>
+
+    <!-- EKRANI VIZUAL: Majtas Letra e Bardhë, Djathtas Letra e Zezë/Kaftë -->
+    <div class="visual-display">
+        <!-- Letra e Bardhë (Majtas) -->
+        <div id="pakoBardhe" class="paper-packet active">
+            <div class="packet-img">📄</div>
+            <div class="packet-label">Letër e Bardhë</div>
+        </div>
+        
+        <!-- Simbol i veçantë në mes për ta bërë cool -->
+        <div style="font-size: 24px; color: #8b5a2b; animation: pulse 2s infinite;">⚡</div>
+
+        <!-- Letra e Zezë/Kaftë me kokrra (Djathtas) -->
+        <div id="pakoZeza" class="paper-packet">
+            <div class="packet-img">🛍️</div>
+            <div class="packet-label">Paketim i Fortë</div>
+        </div>
+    </div>
+
+    <!-- Etiketat e Statusit -->
+    <div class="status-bar">
+        <span id="badgeSasia" class="badge">100g</span>
+        <span id="badgeNuanca" class="badge badge-outline">Nuanca: E Kaftë</span>
+    </div>
+
+    <!-- Fatura dhe Llogaritja -->
+    <div class="fatura">
+        <div class="rresht">
+            <span>Vlera pa TVSH:</span>
+            <span id="vlera-pa-tvsh">0.00 €</span>
+        </div>
+        <div class="rresht">
+            <span>TVSH (18%):</span>
+            <span id="tvsh">0.00 €</span>
+        </div>
+        <div class="rresht total">
+            <span>Çmimi Total (me TVSH):</span>
+            <span id="total">0.00 €</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function llogaritFaturen() {
+    const cmimiPerGram = 12 / 1000; 
+    const tvshNorma = 0.18; 
+
+    const sasia = parseFloat(document.getElementById('sasia').value);
+    const llojiLetres = document.getElementById('letra').value;
+    const nuancaKafes = document.getElementById('nuanca').value;
+
+    // Llogaritja e saktë (pa asnjë pagesë shtesë për paketimin)
+    const cmimiTotal = sasia * 1000 * cmimiPerGram;
+
+    const vleraPaTvsh = cmimiTotal / (1 + tvshNorma);
+    const vleraTvsh = cmimiTotal - vleraPaTvsh;
+
+    // Shfaqja e çmimeve
+    document.getElementById('vlera-pa-tvsh').innerText = vleraPaTvsh.toFixed(2) + " €";
+    document.getElementById('tvsh').innerText = vleraTvsh.toFixed(2) + " €";
+    document.getElementById('total').innerText = cmimiTotal.toFixed(2) + " €";
+
+    // Përditësimi i teksteve poshtë paketimit
+    document.getElementById('badgeSasia').innerText = (sasia * 1000) + "g";
+    document.getElementById('badgeNuanca').innerText = "Nuanca: " + nuancaKafes;
+
+    // KONTROLLI VIZUAL: Aktivizo ndriçimin majtas ose djathtas sipas zgjedhjes
+    const pakoBardhe = document.getElementById('pakoBardhe');
+    const pakoZeza = document.getElementById('pakoZeza');
+
+    if (llojiLetres === 'zeza') {
+        pakoZeza.classList.add('active');
+        pakoBardhe.classList.remove('active');
+    } else {
+        pakoBardhe.classList.add('active');
+        pakoZeza.classList.remove('active');
+    }
+}
+
+window.onload = llogaritFaturen;
+</script>
+
+</body>
+</html>

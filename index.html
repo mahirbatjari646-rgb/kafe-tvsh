@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llogaritësi i Kafes me TVSH</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea;
+            color: #4a3b32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            color: #6f4e37;
+            margin-bottom: 20px;
+        }
+        .info {
+            background-color: #fdfaf6;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6f4e37;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #d1c7bd;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #4a3b32;
+            cursor: pointer;
+            outline: none;
+        }
+        select:focus {
+            border-color: #6f4e37;
+        }
+        .fatura {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #e6dfd7;
+            text-align: left;
+        }
+        .rresht {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6f4e37;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>☕ Dyqani i Kafes</h2>
+    <div class="info">
+        Çmimi bazë: <strong>12.00€ / 1kg</strong> <br>
+        TVSH e përfshirë: <strong>18%</strong>
+    </div>
+
+    <label for="sasia">Zgjidh sasinë e kafes:</label>
+    <select id="sasia" onchange="llogaritFaturen()">
+        <option value="100">100 g</option>
+        <option value="200">200 g</option>
+        <option value="300">300 g</option>
+        <option value="400">400 g</option>
+        <option value="500">500 g</option>
+        <option value="600">600 g</option>
+        <option value="700">700 g</option>
+        <option value="800">800 g</option>
+        <option value="900">900 g</option>
+        <option value="1000" selected>1 kg (1000 g)</option>
+    </select>
+
+    <div class="fatura">
+        <div class="rresht">
+            <span>Vlera pa TVSH:</span>
+            <span id="vlera-pa-tvsh">0.00 €</span>
+        </div>
+        <div class="rresht">
+            <span>TVSH (18%):</span>
+            <span id="tvsh">0.00 €</span>
+        </div>
+        <div class="rresht total">
+            <span>Çmimi Total (me TVSH):</span>
+            <span id="total">0.00 €</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function llogaritFaturen() {
+        const cmimiPerGram = 12 / 1000; // 0.012€ për gram
+        const tvshNorma = 0.18; // 18% TVSH
+        
+        // Merr sasinë e përzgjedhur nga dropdown
+        const sasia = parseFloat(document.getElementById('sasia').value);
+        
+        // Çmimi total final (me TVSH) i takon sasisë përkatëse (p.sh. 1kg = 12€)
+        const cmimiTotal = sasia * cmimiPerGram;
+        
+        // Formula për të gjetur vlerën pa TVSH kur çmimi total e ka të përfshirë TVSH-në:
+        // Vlera_pa_TVSH = Çmimi_Total / (1 + Norma_e_TVSH)
+        const vleraPaTvsh = cmimiTotal / (1 + tvshNorma);
+        const vleraTvsh = cmimiTotal - vleraPaTvsh;
+
+        // Shfaqja e rezultateve në ekran me dy shifra pas pikës dhjetore
+        document.getElementById('vlera-pa-tvsh').innerText = vleraPaTvsh.toFixed(2) + " €";
+        document.getElementById('tvsh').innerText = vleraTvsh.toFixed(2) + " €";
+        document.getElementById('total').innerText = cmimiTotal.toFixed(2) + " €";
+    }
+
+    // Ekzekuto llogaritjen sapo të hapet faqja për herë të parë
+    window.onload = llogaritFaturen;
+</script>
+
+</body>
+</html>

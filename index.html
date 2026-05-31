@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuleta Dixhitale - Mocca Kaffe Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea;
+            color: #4a3b32;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            text-align: center;
+            color: #5c4033;
+            margin-top: 0;
+            font-size: 26px;
+            border-bottom: 2px solid #e6dfd7;
+            padding-bottom: 10px;
+        }
+        
+        /* Kuleta / Kartelat e Statistikave */
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .card {
+            background: #fdfbf7;
+            border: 1px solid #e6dfd7;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+        }
+        .card.profit {
+            background-color: #edf7ed;
+            border-color: #c3e6cb;
+        }
+        .card h3 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #8b5a2b;
+        }
+        .card.profit h3 {
+            color: #1e7e34;
+        }
+        .card .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5c4033;
+        }
+        .card.profit .number {
+            color: #1e7e34;
+        }
+
+        /* Forma e Shërbimit */
+        .form-section {
+            background: #fdfcfb;
+            border: 1px solid #e6dfd7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .form-section h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #6f4e37;
+            font-size: 16px;
+        }
+        .form-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1c7bd;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        select:focus, input:focus {
+            border-color: #6f4e37;
+        }
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-add:hover {
+            background-color: #218838;
+        }
+
+        /* Historiku dhe Tabela */
+        .history-section {
+            margin-top: 10px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .history-header h4 {
+            margin: 0;
+            color: #5c4033;
+        }
+        .btn-clear {
+            background: none;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-clear:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e6dfd7;
+        }
+        th {
+            background-color: #6f4e37;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #fdfbf7;
+        }
+        .empty-msg {
+            text-align: center;
+            color: #a09084;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>💼 Paneli i Dyqanit - Mocca Kaffe</h2>
+    
+    <!-- KULETA DIXHITALE (STATISTIKAT) -->
+    <div class="wallet-grid">
+        <div class="card">
+            <h3>Klientë Gjithsej</h3>
+            <div id="statKlientet" class="number">0</div>
+        </div>
+        <div class="card">
+            <h3>Puna Totale (Xhiro)</h3>
+            <div id="statXhiro" class="number">0.00 €</div>
+        </div>
+        <div class="card profit">
+            <h3>Fitimi Neto (2€/1kg)</h3>
+            <div id="statFitimi" class="number">0.00 €</div>
+        </div>
+    </div>
+
+    <!-- FORMA E SHERBIMIT TE KLIENTIT -->
+    <div class="form-section">
+        <h4>⚡ Shërbe një Klient të Ri</h4>
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="klientEmri">Emri i Klientit (Opcionale):</label>
+                <input type="text" id="klientEmri" placeholder="Psh. Klienti 1">
+            </div>
+            <div class="form-group">
+                <label for="klientSasia">Sasia e Kafes:</label>
+                <select id="klientSasia">
+                    <option value="0.100">100 g</option>
+                    <option value="0.200">200 g</option>
+                    <option value="0.300">300 g</option>
+                    <option value="0.400">400 g</option>
+                    <option value="0.500">500 g</option>
+                    <option value="0.600">600 g</option>
+                    <option value="0.700">700 g</option>
+                    <option value="0.800">800 g</option>
+                    <option value="0.900">900 g</option>
+                    <option value="1.000" selected>1 kg (1000 g)</option>
+                </select>
+            </div>
+            <button class="btn-add" onclick="regjistroShitjen()">✓ Ruaj shitjen</button>
+        </div>
+    </div>
+
+    <!-- HISTORIKU VJETOR I shitjeve -->
+    <div class="history-section">
+        <div class="history-header">
+            <h4>📅 Historiku i Shitjeve dhe Kalendari</h4>
+            <button class="btn-clear" onclick="pastroHistorikun()">Pastro Historikun</button>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data & Ora</th>
+                        <th>Klientët</th>
+                        <th>Sasia</th>
+                        <th>Pagesa</th>
+                        <th>Fitimi yt</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaShitjeve">
+                    <!-- Këtu mbushen shitjet automatikisht -->
+                </tbody>
+            </table>
+            <div id="mesazhiZbrazet" class="empty-msg">Nuk ka asnjë shitje të regjistruar për sot.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ngarkimi i të dhënave të ruajtura në LocalStorage sapo hapet faqja
+    let historikuShitjeve = JSON.parse(localStorage.getItem('mocca_kaffe_data')) || [];
+
+    function rretho(numri) {
+        return Math.round((numri + Number.EPSILON) * 100) / 100;
+    }
+
+    function perditsoPanelin() {
+        const tbody = document.getElementById('tabelaShitjeve');
+        const emptyMsg = document.getElementById('mesazhiZbrazet');
+        
+        // Fshij rreshtat e vjetër të tabelës vizuale
+        tbody.innerHTML = '';
+
+        let totalKlientet = historikuShitjeve.length;
+        let totalXhiro = 0;
+        let totalFitimi = 0;
+
+        if (totalKlientet === 0) {
+            emptyMsg.style.display = 'block';
+        } else {
+            emptyMsg.style.display = 'none';
+            
+            // Rendit historikun që shitja më e re të dalë e para lart
+            historikuShitjeve.slice().reverse().forEach(shitja => {
+                totalXhiro += shitja.pagesa;
+                totalFitimi += shitja.fitimi;
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${shitja.data}</td>
+                    <td>${shitja.emri || 'Klient i Rregullt'}</td>
+                    <td>${shitja.sasia * 1000}g</td>
+                    <td><strong>${shitja.pagesa.toFixed(2)} €</strong></td>
+                    <td style="color: #1e7e34; font-weight:bold;">+${shitja.fitimi.toFixed(2)} €</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Rishkruaj vlerat te Kartelat e Kuletës lart
+        document.getElementById('statKlientet').innerText = totalKlientet;
+        document.getElementById('statXhiro').innerText = totalXhiro.toFixed(2) + " €";
+        document.getElementById('statFitimi').innerText = totalFitimi.toFixed(2) + " €";
+    }
+
+    function regjistroShitjen() {
+        const sasia = parseFloat(document.getElementById('klientSasia').value);
+        let emriInput = document.getElementById('klientEmri').value.trim();
+        
+        // Çmimi bazë: 12 euro për 1kg
+        const cmimiPerKilogram = 12;
+        const pagesaKompensuar = sasia * cmimiPerKilogram;
+        
+        // Fitimi neto: 2 euro për 1kg
+        const fitimiPerKilogram = 2;
+        const fitimiKompensuar = sasia * fitimiPerKilogram;
+
+        // Merr kohën dhe datën e saktë të sistemit
+        const tani = new Date();
+        const dataFormatuar = tani.getDate().toString().padStart(2, '0') + '/' + 
+                              (tani.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                              tani.getFullYear() + ' ' + 
+                              tani.getHours().toString().padStart(2, '0') + ':' + 
+                              tani.getMinutes().toString().padStart(2, '0');
+
+        // Krijo objektin e shitjes së re
+        const shitjaERe = {
+            data: dataFormatuar,
+            emri: emriInput,
+            sasia: sasia,
+            pagesa: rretho(pagesaKompensuar),
+            fitimi: rretho(fitimiKompensuar)
+        };
+
+        // Shtoje në listë dhe ruaje në memorien e shfletuesit
+        historikuShitjeve.push(shitjaERe);
+        localStorage.setItem('mocca_kaffe_data', JSON.stringify(historikuShitjeve));
+
+        // Pastro fushën e emrit për klientin tjetër
+        document.getElementById('klientEmri').value = '';
+        
+        // Rifresko të dhënat në ekran
+        perditsoPanelin();
+    }
+
+    function pastroHistorikun() {
+        if (confirm("A jeni i sigurt që dëshironi të fshini të gjithë historikun e kuletës vjetore?")) {
+            historikuShitjeve = [];
+            localStorage.removeItem('mocca_kaffe_data');
+            perditsoPanelin();
+        }
+    }
+
+    // Ekzekutohet automatikisht në fillim për të mbushur të dhënat nëse ekzistojnë
+    window.onload = perditsoPanelin;
+</script>
+
+</body>
+</html>
